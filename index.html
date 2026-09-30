@@ -1,0 +1,349 @@
+<title>Carta de Vinos</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Hanken+Grotesk:wght@400;500;600&display=swap">
+<style>
+/* Layout: una columna tipo carta impresa, pestañas de texto fijas arriba, filas con filete fino y precios alineados a la derecha */
+:root {
+  --bg: #F4F3F1;
+  --ink: #241C20;
+  --muted: #6D6267;
+  --rule: #DCD5D7;
+  --accent: #7B1E3C;
+  --accent-ink: #FFFFFF;
+  --font-display: 'Bodoni Moda', 'Didot', 'Bodoni 72', Georgia, serif;
+  --font-body: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161114;
+    --ink: #F1EAED;
+    --muted: #A8999F;
+    --rule: #3A2E34;
+    --accent: #E08AA2;
+    --accent-ink: #161114;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161114;
+  --ink: #F1EAED;
+  --muted: #A8999F;
+  --rule: #3A2E34;
+  --accent: #E08AA2;
+  --accent-ink: #161114;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-text-size-adjust: 100%;
+}
+.wrap { max-width: 40rem; margin-inline: auto; padding-inline: 16px; }
+
+.top { padding-block: 30px 20px; }
+.eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+h1 {
+  margin: 0.55rem 0 0.6rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.5rem, 11vw, 3.75rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.word {
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--accent);
+  font: inherit;
+  font-style: italic;
+  letter-spacing: inherit;
+  text-transform: none;
+  text-decoration: underline dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.14em;
+  cursor: pointer;
+}
+.word:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.sub { margin: 0; color: var(--muted); }
+
+.tabs-bar {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 5;
+  background: var(--bg);
+  border-block: 1px solid var(--rule);
+}
+.tabs { display: flex; }
+.tab {
+  flex: 1;
+  margin-bottom: -1px;
+  padding: 15px 4px 13px;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  font: 600 0.78rem/1 var(--font-body);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.intro { margin: 18px 0 0; color: var(--muted); font-size: 0.9rem; }
+
+.group { padding-top: 28px; }
+.ghead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ink);
+}
+.ghead h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+.cols {
+  display: flex;
+  gap: 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.cols span, .prices span { min-width: 4.6rem; text-align: right; }
+
+.list { list-style: none; margin: 0; padding: 0; }
+.plain { padding-top: 20px; }
+.plain .list { border-top: 1px solid var(--ink); }
+.item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 14px;
+  border-bottom: 1px solid var(--rule);
+}
+.info { flex: 1; min-width: 0; }
+.info h3 {
+  margin: 0 0 3px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+.meta { margin: 0; font-size: 0.85rem; color: var(--muted); }
+.note { margin: 5px 0 0; font-size: 0.88rem; font-style: italic; }
+.prices {
+  display: flex;
+  gap: 8px;
+  align-self: flex-start;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.prices .none { color: var(--muted); font-weight: 400; }
+
+.foot { margin-top: 36px; padding-block: 20px 44px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 0.8rem; }
+.foot p { margin: 0 0 6px; }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <p class="eyebrow">Carta de bebidas</p>
+    <h1>Carta de <button class="word" id="word" type="button" title="Tocá para cambiar de sección">Vinos</button></h1>
+    <p class="sub">Vinos, licores y aperitivos. Precios finales en pesos, IVA incluido.</p>
+  </div>
+</header>
+
+<div class="tabs-bar">
+  <div class="wrap">
+    <div class="tabs" role="tablist" aria-label="Secciones de la carta">
+      <button class="tab" role="tab" id="t-vinos" aria-controls="p-vinos" aria-selected="true">Vinos</button>
+      <button class="tab" role="tab" id="t-licores" aria-controls="p-licores" aria-selected="false">Licores</button>
+      <button class="tab" role="tab" id="t-aperitivos" aria-controls="p-aperitivos" aria-selected="false">Aperitivos</button>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+  <section id="p-vinos" role="tabpanel" aria-labelledby="t-vinos"></section>
+  <section id="p-licores" role="tabpanel" aria-labelledby="t-licores" hidden></section>
+  <section id="p-aperitivos" role="tabpanel" aria-labelledby="t-aperitivos" hidden></section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Prohibida la venta de bebidas alcohólicas a menores de 18 años. Beber con moderación.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var money = function (n) { return '$ ' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
+  var esc = function (s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  };
+
+  var DATA = {
+    vinos: {
+      intro: 'Precios por botella.',
+      cols: ['Precio'],
+      groups: [
+        { id: 'botellas', t: 'Botellas', items: [
+          { n: "Alamo", p: [null] },
+          { n: "Alaris", m: "Sauvignon Blanc · Malbec", p: [4800] },
+          { n: "Alma Mora", m: "Malbec", p: [6500] },
+          { n: "Alma Mora Reserva", p: [null] },
+          { n: "Benjamín", m: "Chardonnay", p: [5300] },
+          { n: "Bosco", m: "Malbec · Chardonnay", p: [5200] },
+          { n: "Chacabuco", m: "Rosé", p: [3200] },
+          { n: "Colon", m: "Torrontés", p: [3200] },
+          { n: "Cosecha Tardia", m: "Tinto Dulce", p: [6300] },
+          { n: "Dilema", m: "Cabernet Sauvignon · Blanco Dulce", p: [3500] },
+          { n: "Etchart Privado", m: "Torrontés", p: [4000] },
+          { n: "El Abuelo", m: "Jerez", p: [3500] },
+          { n: "El Bautismo", m: "Rosé", p: [3200] },
+          { n: "Estancia Mendoza", m: "Chardonnay · Chenin/Chardonnay · Blanco Dulce", p: [3200] },
+          { n: "Gran Loco", m: "Blend", p: [6000] },
+          { n: "La Linda", m: "Chardonnay", p: [7000] },
+          { n: "Lola", m: "Malbec", p: [5000] },
+          { n: "Marques del Sur", m: "Dulce Tardío", p: [3200] },
+          { n: "Nampe", m: "Chardonnay · Cabernet Sauvignon", p: [3200] },
+          { n: "Otro Loco Más", m: "Malbec", p: [4300] },
+          { n: "Oveja Black", m: "Chenin Dulce", p: [4000] },
+          { n: "Prófugo", m: "Malbec · Chenin Dulce", p: [4200] },
+          { n: "Santa Julia", m: "Chenin Dulce Natural", p: [7500] },
+          { n: "Sin Palabras", m: "Cabernet Sauvignon · Malbec", p: [3600] },
+          { n: "Suter", m: "Malbec", p: [3300] },
+          { n: "Viñas de Balbo", p: [3500] },
+          { n: "Zumuva", m: "Blanco · Blanco Dulce · Tinto · Tinto Dulce", p: [2300] }
+        ] }
+      ]
+    },
+    licores: {
+      intro: '',
+      cols: ['Precio'],
+      groups: [
+        { id: 'licores', t: '', items: [
+          { n: "Borghetti", p: [12000] },
+          { n: "Sheridan", p: [60000] },
+          { n: "Tia María Original", p: [11000] },
+          { n: "Tia María Cream", p: [14280] }
+        ] }
+      ]
+    },
+    aperitivos: {
+      intro: '',
+      cols: ['Precio'],
+      groups: [
+        { id: "aperitivos", t: "Aperitivos", items: [
+          { n: "Aperol", p: [12500] },
+          { n: "Campari", p: [11500] },
+          { n: "Carpano", p: [7700] },
+          { n: "Cinzano", p: [10500] },
+          { n: "Ramazzotti", p: [7400] }
+        ] },
+        { id: "fernet", t: "Fernet", items: [
+          { n: "1882", p: [null] },
+          { n: "Branca 450 ml", p: [14000] },
+          { n: "Branca 750 ml", p: [21000] },
+          { n: "Branca Menta 750 ml", p: [13000] },
+          { n: "Buhero Negro 450 ml", p: [6000] },
+          { n: "Buhero Negro 750 ml", p: [9500] },
+          { n: "Vittone", p: [5600] }
+        ] },
+        { id: "ron", t: "Ron", items: [
+          { n: "Havana Club Añejo 3 Años", p: [17500] }
+        ] },
+        { id: "vodka", t: "Vodka", items: [
+          { n: "Smirnoff Clásico", p: [9300] }
+        ] },
+        { id: "whisky", t: "Whisky", items: [
+          { n: "Blenders Honey", p: [10800] },
+          { n: "Johnnie Walker Black Label", p: [65000] },
+          { n: "Johnnie Walker Red Label", p: [28000] },
+          { n: "White Horse", p: [19500] }
+        ] }
+      ]
+    }
+  };
+
+  function renderGroup(g, cols) {
+    var items = g.items.map(function (i) {
+      var prices = cols.map(function (_, k) {
+        var v = i.p[k];
+        return v ? '<span>' + money(v) + '</span>' : '<span class="none">—</span>';
+      }).join('');
+      return '<li class="item"><div class="info"><h3>' + esc(i.n) + '</h3>' + (i.m ? '<p class="meta">' + esc(i.m) + '</p>' : '') +
+        (i.note ? '<p class="note">' + esc(i.note) + '</p>' : '') +
+        '</div><div class="prices">' + prices + '</div></li>';
+    }).join('');
+    var heads = cols.map(function (c) { return '<span>' + esc(c) + '</span>'; }).join('');
+    var head = g.t ? '<div class="ghead"><h2>' + esc(g.t) + '</h2><div class="cols">' + heads + '</div></div>' : '';
+    return '<section class="group' + (g.t ? '' : ' plain') + '" data-g="' + g.id + '">' + head +
+      '<ul class="list">' + items + '</ul></section>';
+  }
+
+  var ids = ['vinos', 'licores', 'aperitivos'];
+  ids.forEach(function (id) {
+    var d = DATA[id];
+    var html = d.intro ? '<p class="intro">' + esc(d.intro) + '</p>' : '';
+    html += d.groups.map(function (g) { return renderGroup(g, d.cols); }).join('');
+    document.getElementById('p-' + id).innerHTML = html;
+  });
+
+  var LABELS = { vinos: 'Vinos', licores: 'Licores', aperitivos: 'Aperitivos' };
+
+  function show(id, fromUser) {
+    ids.forEach(function (x) {
+      document.getElementById('p-' + x).hidden = x !== id;
+      document.getElementById('t-' + x).setAttribute('aria-selected', x === id ? 'true' : 'false');
+    });
+    var w = document.getElementById('word');
+    if (w.textContent !== LABELS[id]) {
+      w.textContent = LABELS[id];
+      var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (fromUser && !calm && w.animate) {
+        w.animate([{ opacity: 0, transform: 'translateY(0.2em)' }, { opacity: 1, transform: 'none' }], { duration: 220, easing: 'ease-out' });
+      }
+    }
+    if (fromUser) {
+      try { history.replaceState(null, '', '#' + id); } catch (err) {}
+      var bar = document.querySelector('.tabs-bar');
+      if (window.scrollY > bar.offsetTop) window.scrollTo(0, bar.offsetTop);
+    }
+  }
+  ids.forEach(function (id) {
+    document.getElementById('t-' + id).addEventListener('click', function () { show(id, true); });
+  });
+
+  document.getElementById('word').addEventListener('click', function () {
+    var cur = ids.findIndex(function (x) { return !document.getElementById('p-' + x).hidden; });
+    show(ids[(cur + 1) % ids.length], true);
+  });
+
+  var start = (location.hash || '').slice(1);
+  show(ids.indexOf(start) > -1 ? start : 'vinos', false);
+})();
+</script>
